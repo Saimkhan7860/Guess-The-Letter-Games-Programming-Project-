@@ -1,0 +1,129 @@
+#Project 1 "Guess-the-letters" game
+
+#The game will begin by asking the users to guess the letters in a word to create the word
+
+import random
+
+#list of words that the user will guess 
+words = ["audi","bmw","ferrari","lambo","honda","toyota","race","fast","speed","time","money","hours"]
+
+print(" Welcome to word guess game !!")
+
+#this outter while loops runs the whole program until the user finishes the game or chooses to exit 
+while True:
+    
+    #this loop continues to ask the user for input until they give a valid guess between 1 and 10 
+    while True:
+        
+        try:
+            num = int(input("   Number of guesses you want to try (in range [1,10]) : ")) #range for the guesses
+            
+            #if at this point in the game the user enters these words, the game ends     
+            if((num == "stop") or (num == "exit")):
+                print("Game Ends")
+                break
+                
+            #checks if the user's input is within the specified range if not an exception is raised 
+            if num > 10 or num < 1:
+                raise Exception()
+                   
+        except:
+            print("Wrong input!! Try again")
+            
+        else:
+            break
+
+    #This loop runs until the user enters a valid minimum word length between 4 and 5         
+    while True:
+        
+        try:
+            min_len = int(input("   Enter minimum word length (in range [4,5]) : "))
+            
+            #if at this point in the game the user enters these words, the game ends
+            if((num == "stop") or (num == "exit")):
+                print("Game Ends")
+                break 
+            
+            #checks if the user input is within the specified range, if not an exception is raised 
+            if min_len > 5 or min_len < 4:
+                raise Exception()   
+                
+        except:
+            print("Wrong input!! Try again")
+            
+        else:
+            break
+
+    orignal_word = random.choice(words) #the random generator will select a random word from the word list 
+    l = len(orignal_word) #l stores the length of the chosen word 
+    
+    
+    while l < min_len:
+        orignal_word = random.choice(words)
+        l = len(orignal_word)
+
+    guessed_word = [] #each guessed letter is stored in a new array for the guessed word 
+
+    #loops through the size of the word to add an asteriks for each letter in the original word to be guessed  
+    for i in range(l):
+        guessed_word.append("*")
+
+    Wrong_guesses = [] #new array for storing wrong guesses 
+    
+    
+    while num:
+        num = num - 1
+        print("     Word : " , *([i for i in guessed_word]))
+        print("     Wrong Guesses : ", ([i for i in Wrong_guesses]) )
+        
+        guessed_letter = input("    Guess the  letter ( Remaining Attempts = {} ) : ".format(num))
+        
+        #if at this point in the game the user enters these words, the game ends
+        if guessed_letter == "stop" or guessed_letter == "exit":
+            print("Game Ends")
+            break
+        
+        #checks to see if user input is a letter and prints the appropriate message if it is not 
+        if not guessed_letter.isalpha():
+            print(' Guess only a letter')
+            
+        #checks if the user inputs multiple letters for one guess and prints the appropriate message if they don't     
+        elif(len(guessed_letter)>1):
+            print(' Guess only one letter!!')
+            
+        #ensures that if a letter which is not in the word has been guessed before, it is not guessed again  
+        elif( guessed_letter in Wrong_guesses ):
+            print(" {} is not present in the word and has been guessed before. Please enter another letter!".format(guessed_letter))
+            
+        #executes if the letter guessed is found in the original word being guessed and then adds that letter to the guessed word array   
+        elif guessed_letter in orignal_word:
+            for i in range(l):
+                if orignal_word[i] == guessed_letter:
+                    guessed_word[i] = orignal_word[i]
+        
+        #executes if the letter guessed is not found in the word 
+        else:
+            print("Sorry! letter entered is not present in the word!")
+            Wrong_guesses.append(guessed_letter)
+        
+        guess = [i for i in guessed_word]
+        guess = "".join(guess)
+        
+        if orignal_word == guess:
+            print(" You Got It!!!")
+            break
+            
+        #executes if the original word is not guessed     
+        if num == 0:
+            if orignal_word != guess:
+                print(" No more guesses left! Game Ends! ")
+                print(" You lose!! Original word was -> {}".format(orignal_word))
+                
+                
+    choice = input("    Do you want to play again ( enter no to exit ) : ")
+    
+    if choice == "no":
+        print("Thank You for playing!")
+        #exit(0)
+        break
+        
